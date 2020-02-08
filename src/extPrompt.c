@@ -38,12 +38,14 @@ int extPrompt_ReadConsole(const char *old_prompt, unsigned char *buf, int len,
     return (*old_R_ReadConsole)(new_prompt, buf, len, addtohistory);
 }
 
+__declspec(dllexport)
 void extPrompt_unload() {
     R_ReadConsole = old_R_ReadConsole;
     old_R_ReadConsole = NULL;
     extPrompt_initialized = 0;
 }
 
+__declspec(dllexport)
 void extPrompt() {
     if (extPrompt_initialized) { return; }
 
