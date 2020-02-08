@@ -1,5 +1,5 @@
 #include <R.h>
-#include <Rinterface.h>
+//#include <Rinterface.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -8,7 +8,7 @@
 // This is the same length as defined in src/main/scan.c
 #define CONSOLE_PROMPT_SIZE 256
 
-extern int (*ptr_R_ReadConsole)(const char *, unsigned char *, int, int);
+extern int (*R_ReadConsole)(const char *, unsigned char *, int, int);
 static int (*old_R_ReadConsole)(const char *, unsigned char *, int, int);
 
 static int extPrompt_initialized = 0;
@@ -39,7 +39,7 @@ int extPrompt_ReadConsole(const char *old_prompt, unsigned char *buf, int len,
 }
 
 void extPrompt_unload() {
-    ptr_R_ReadConsole = old_R_ReadConsole;
+    R_ReadConsole = old_R_ReadConsole;
     old_R_ReadConsole = NULL;
     extPrompt_initialized = 0;
 }
@@ -47,8 +47,8 @@ void extPrompt_unload() {
 void extPrompt() {
     if (extPrompt_initialized) { return; }
 
-    old_R_ReadConsole = ptr_R_ReadConsole;
-    ptr_R_ReadConsole = extPrompt_ReadConsole;
+    old_R_ReadConsole = R_ReadConsole;
+    R_ReadConsole = extPrompt_ReadConsole;
 
     extPrompt_initialized = 1;
 }
